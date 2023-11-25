@@ -16,7 +16,7 @@ In this project,  will seek to work with a SQL database containing test performa
    *  Count unique values with COUNT(DISTINCT)
    *  Combine SUM() and COUNT() to calculate in each row
      
-[View my project here!]()
+[View my project here!](https://github.com/addy-analytics/SQL-DataCamp-Projects/blob/main/Analyzing%20NYC%20Public%20School%20Test%20Result%20Scores/Analyzing%20NYC%20Public%20School%20Test%20Result%20Scores/notebook.ipynb)
 
 
 ### 3. When Was the Golden Age of Video Games?
