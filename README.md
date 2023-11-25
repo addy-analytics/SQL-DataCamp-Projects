@@ -1,5 +1,6 @@
 # SQL-DataCamp-Projects
 📊 Guided projects
+
 ### 1. Analyzing American Baby Name Trends
    * Apply the CASE function to add a new column based on some conditions
    * Apply the DENSE_RANK(), SUM() window function
@@ -15,7 +16,8 @@
 
 ### 3. Analyzing NYC Public School Test Result Scores
 📺Project Task
-  In this project,  will seek to work with a SQL database containing test performance from NYC's public schools. We will read the data, find missing codes, and schools by building code. We will aslo find the best   schools for maths, lowest reading score, best writing school, and top 10 schools. We will also rank boroughs and look out for Brooklyn numbers. The functions below will help us achieve our aim for this project.
+
+In this project,  will seek to work with a SQL database containing test performance from NYC's public schools. We will read the data, find missing codes, and schools by building code. We will aslo find the best   schools for maths, lowest reading score, best writing school, and top 10 schools. We will also rank boroughs and look out for Brooklyn numbers. The functions below will help us achieve our aim for this project.
    *  Count unique values with COUNT(DISTINCT)
    *  Combine SUM() and COUNT() to calculate in each row
 [View my project here!]()
