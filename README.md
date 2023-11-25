@@ -5,6 +5,7 @@
   * Apply the CASE function to add a new column based on some conditions
   * Apply the DENSE_RANK(), SUM() window function
   * Simplify the code with CTE
+    
  [View my project here!](https://github.com/addy-analytics/SQL-DataCamp-Projects/blob/main/Analyzing%20American%20Baby%20Name%20Trends/notebook.ipynb)
 
 
@@ -13,6 +14,7 @@
 📺Project Task
   * Use HAVING to filter on results of GROUP BY
   * JOIN and LEFT JOIN tables
+    
  [View my project here!](https://github.com/addy-analytics/SQL-DataCamp-Projects/blob/main/When%20Was%20the%20Golden%20Age%20of%20Video%20Games_/notebook.ipynb)
 
 
