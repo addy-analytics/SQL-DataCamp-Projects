@@ -1,201 +1,308 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## 1. Inspecting the data
-# <p><img src="https://assets.datacamp.com/production/project_1416/img/schoolbus.jpg" alt="New York City schoolbus" height="300px" width="300px"></p>
-# <p>Photo by <a href="https://unsplash.com/@jannis_lucas">Jannis Lucas</a> on <a href="https://unsplash.com">Unsplash</a>.
-# <br></p>
-# <p>Every year, American high school students take SATs, which are standardized tests intended to measure literacy, numeracy, and writing skills. There are three sections - reading, math, and writing, each with a maximum score of 800 points. These tests are extremely important for students and colleges, as they play a pivotal role in the admissions process.</p>
-# <p>Analyzing the performance of schools is important for a variety of stakeholders, including policy and education professionals, researchers, government, and even parents considering which school their children should attend. </p>
-# <p>In this notebook, we will take a look at data on SATs across public schools in New York City. Our database contains a single table:</p>
-# <h1 id="schools"><code>schools</code></h1>
+# ## 1. The ten best-selling video games
+# <p><img src="https://assets.datacamp.com/production/project_1413/img/video_game.jpg" alt="A video game player choosing a game to play on Nintendo Switch." width="400"></p>
+# <p>Photo by <a href="https://unsplash.com/@retromoon">Dan Schleusser</a> on <a href="https://unsplash.com">Unsplash</a>.</p>
+# <p>Video games are big business: the global gaming market is projected to be worth more than $300 billion by 2027 according to <a href="https://www.mordorintelligence.com/industry-reports/global-gaming-market">Mordor Intelligence</a>. With so much money at stake, the major game publishers are hugely incentivized to create the next big hit. But are games getting better, or has the golden age of video games already passed?</p>
+# <p>In this project, we'll explore the top 400 best-selling video games created between 1977 and 2020. We'll compare a dataset on game sales with critic and user reviews to determine whether or not video games have improved as the gaming market has grown.</p>
+# <p>Our database contains two tables. We've limited each table to 400 rows for this project, but you can find the complete dataset with over 13,000 games on <a href="https://www.kaggle.com/holmjason2/videogamedata">Kaggle</a>. </p>
+# <h3 id="game_sales"><code>game_sales</code></h3>
 # <table>
 # <thead>
 # <tr>
-# <th>column</th>
+# <th style="text-align:left;">column</th>
 # <th>type</th>
-# <th>description</th>
+# <th>meaning</th>
 # </tr>
 # </thead>
 # <tbody>
 # <tr>
-# <td><code>school_name</code></td>
-# <td><code>varchar</code></td>
-# <td>Name of school</td>
+# <td style="text-align:left;"><code>game</code></td>
+# <td>varchar</td>
+# <td>Name of the video game</td>
 # </tr>
 # <tr>
-# <td><code>borough</code></td>
-# <td><code>varchar</code></td>
-# <td>Borough that the school is located in</td>
+# <td style="text-align:left;"><code>platform</code></td>
+# <td>varchar</td>
+# <td>Gaming platform</td>
 # </tr>
 # <tr>
-# <td><code>building_code</code></td>
-# <td><code>varchar</code></td>
-# <td>Code for the building</td>
+# <td style="text-align:left;"><code>publisher</code></td>
+# <td>varchar</td>
+# <td>Game publisher</td>
 # </tr>
 # <tr>
-# <td><code>average_math</code></td>
-# <td><code>int</code></td>
-# <td>Average math score for SATs</td>
+# <td style="text-align:left;"><code>developer</code></td>
+# <td>varchar</td>
+# <td>Game developer</td>
 # </tr>
 # <tr>
-# <td><code>average_reading</code></td>
-# <td><code>int</code></td>
-# <td>Average reading score for SATs</td>
+# <td style="text-align:left;"><code>games_sold</code></td>
+# <td>float</td>
+# <td>Number of copies sold (millions)</td>
 # </tr>
 # <tr>
-# <td><code>average_writing</code></td>
-# <td><code>int</code></td>
-# <td>Average writing score for SATs</td>
-# </tr>
-# <tr>
-# <td><code>percent_tested</code></td>
-# <td><code>numeric</code></td>
-# <td>Percentage of students completing SATs</td>
+# <td style="text-align:left;"><code>year</code></td>
+# <td>int</td>
+# <td>Release year</td>
 # </tr>
 # </tbody>
 # </table>
-# <p>Let's familiarize ourselves with the data by taking a looking at the first few schools!</p>
+# <h3 id="reviews"><code>reviews</code></h3>
+# <table>
+# <thead>
+# <tr>
+# <th style="text-align:left;">column</th>
+# <th>type</th>
+# <th>meaning</th>
+# </tr>
+# </thead>
+# <tbody>
+# <tr>
+# <td style="text-align:left;"><code>game</code></td>
+# <td>varchar</td>
+# <td>Name of the video game</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>critic_score</code></td>
+# <td>float</td>
+# <td>Critic score according to Metacritic</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>user_score</code></td>
+# <td>float</td>
+# <td>User score according to Metacritic</td>
+# </tr>
+# </tbody>
+# </table>
+# <p>Let's begin by looking at some of the top selling video games of all time!</p>
 
-# In[54]:
+# In[2]:
 
 
-get_ipython().run_cell_magic('sql', '', 'postgresql:///schools\n    \nSELECT * -- Select all columns from the database\nFROM schools\nLIMIT 10; -- Display only the first ten rows')
+get_ipython().run_cell_magic('sql', '', 'postgresql:///games\n\nselect *\nfrom game_sales\norder by games_sold DESC\nLIMIT 10;')
 
 
-# In[55]:
+# In[3]:
 
 
-get_ipython().run_cell_magic('nose', '', 'last_output = _\n\ndef test_task1_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_task1_results():\n    assert results.shape == (10, 7), \\\n    "The results should have fourteen columns and ten rows."\n    assert set(results.columns) == set([\'school_name\', \'borough\', \'building_code\', \'average_math\', \'average_reading\', \'average_writing\', \'percent_tested\']), \\\n    \'The results should include all columns from the database, without using an alias.\'\n    assert last_output.DataFrame().loc[0, \'building_code\'] == "M022", \\\n    "The building code for the first school should be M022."')
+get_ipython().run_cell_magic('nose', '', 'from decimal import Decimal as D\nlast_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (10, 6), \\\n    "The results should have six columns and ten rows."\n    assert results.columns.tolist() == ["game", "platform", "publisher", "developer", "games_sold", "year"], \\\n    \'The results should have columns named "game", "platform", "publisher", "developer", "games_sold", and "year".\'\n    assert _.DataFrame().loc[0, \'games_sold\'] == D(\'82.90\')\n    "The top selling game should be Wii Sports with 82.90 million copies sold."')
 
 
-# ## 2. Finding missing values
-# <p>It looks like the first school in our database had no data in the <code>percent_tested</code> column! </p>
-# <p>Let's identify how many schools have missing data for this column, indicating schools that did not report the percentage of students tested. </p>
-# <p>To understand whether this missing data problem is widespread in New York, we will also calculate the total number of schools in the database.</p>
+# ## 2. Missing review scores
+# <p>Wow, the best-selling video games were released between 1985 to 2017! That's quite a range; we'll have to use data from the <code>reviews</code> table to gain more insight on the best years for video games. </p>
+# <p>First, it's important to explore the limitations of our database. One big shortcoming is that there is not any <code>reviews</code> data for some of the games on the <code>game_sales</code> table. </p>
 
-# In[56]:
+# In[4]:
 
 
-get_ipython().run_cell_magic('sql', '', '\n-- Count rows with percent_tested missing and total number of schools\nSELECT \n    COUNT(*) - COUNT(percent_tested) as num_tested_missing, \n    COUNT(*) as num_schools\nFROM schools;')
+get_ipython().run_cell_magic('sql', '', '\n-- Join games_sales and reviews\n-- Select a count of the number of games where both critic_score and user_score are null\nSELECT COUNT(g.game)\nFROM game_sales as g\nLEFT JOIN reviews as r\nON g.game = r.game\nWHERE critic_score IS NULL AND user_score IS NULL;')
 
 
-# In[57]:
+# In[5]:
 
 
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task2_columns():\n    assert last_output_df.shape == (1, 2), \\\n    "Did you correctly select the data? Expected the result to contain one row and two columns?"\n    assert set(last_output_df.columns) == set(["num_tested_missing", "num_schools"]), \\\n    "Did you use the alias `num_tested_missing` and also select the `num_schools` column?"\n\ndef test_task2_output():\n    assert last_output_df.iloc[0, 0] == 20, \\\n    """Did you correctly calculate `"num_tested_missing"?"""\n    assert last_output_df.iloc[0, 1] == 375, \\\n    """Did you correctly calculate the total number of rows in the database?"""  ')
+get_ipython().run_cell_magic('nose', '', 'last_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (1, 1), \\\n    "The query should return just one value, a count of games where both critic_score and user_score are null."\n    assert results.columns.tolist() == ["count"], \\\n    \'The results should have just one column, called "count".\'\n    assert last_output.DataFrame().loc[0, \'count\'] == 31, \\\n    "There should be 31 games where both critic_score and user_score are null."')
 
 
-# ## 3. Schools by building code
-# <p>There are 20 schools with missing data for <code>percent_tested</code>, which only makes up 5% of all rows in the database.</p>
-# <p>Now let's turn our attention to how many schools there are. When we displayed the first ten rows of the database, several had the same value in the <code>building_code</code> column, suggesting there are multiple schools based in the same location. Let's find out how many unique school locations exist in our database. </p>
+# ## 3. Years that video game critics loved
+# <p>It looks like a little less than ten percent of the games on the <code>game_sales</code> table don't have any reviews data. That's a small enough percentage that we can continue our exploration, but the missing reviews data is a good thing to keep in mind as we move on to evaluating results from more sophisticated queries. </p>
+# <p>There are lots of ways to measure the best years for video games! Let's start with what the critics think. </p>
 
-# In[58]:
+# In[6]:
 
 
-get_ipython().run_cell_magic('sql', '', '\nSELECT\n    COUNT(DISTINCT building_code) AS num_school_buildings -- Count the number of unique building_code \nFROM\n    schools;')
+get_ipython().run_cell_magic('sql', '', '\n-- Select release year and average critic score for each year, rounded and aliased\n-- Join the game_sales and reviews tables\n-- Group by release year\n-- Order the data from highest to lowest avg_critic_score and limit to 10 results\nSELECT g.year, ROUND(AVG(r.critic_score),2) AS avg_critic_score\nFROM game_sales g\nINNER JOIN reviews r\nON g.game = r.game\nGROUP BY g.year\nORDER BY avg_critic_score DESC\nLIMIT 10;')
 
 
-# In[59]:
+# In[7]:
 
 
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task3_column_name():\n    assert last_output_df.columns.tolist() == ["num_school_buildings"], \\\n    "Did you use the correct alias for the number of unique school buildings?"\n\ndef test_task3_value():\n    assert last_output_df.values.tolist() == [[233]], \\\n    "Did you use the correct method to calculate how many unique school buildings are in the database? Expected a different value."')
+get_ipython().run_cell_magic('nose', '', 'from decimal import Decimal as D\nlast_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (10, 2), \\\n    "Make sure to limit the query to only ten results."\n    assert results.columns.tolist() == ["year", "avg_critic_score"], \\\n    \'The results should have two columns, called "year" and "avg_critic_score".\'\n    assert last_output.DataFrame().loc[0, \'year\'] == 1990, \\\n    "The year with the highest score should be 1990."\n    assert last_output.DataFrame().loc[0, \'avg_critic_score\'] == D(\'9.80\'), \\\n    "The highest average critic score should be 9.80."')
 
 
-# ## 4. Best schools for math
-# <p>Out of 375 schools, only 233 (62%) have a unique <code>building_code</code>! </p>
-# <p>Now let's start our analysis of school performance. As each school reports individually, we will treat them this way rather than grouping them by <code>building_code</code>. </p>
-# <p>First, let's find all schools with an average math score of at least 80% (out of 800). </p>
+# ## 4. Was 1982 really that great?
+# <p>The range of great years according to critic reviews goes from 1982 until 2020: we are no closer to finding the golden age of video games! </p>
+# <p>Hang on, though. Some of those <code>avg_critic_score</code> values look like suspiciously round numbers for averages. The value for 1982 looks especially fishy. Maybe there weren't a lot of video games in our dataset that were released in certain years. </p>
+# <p>Let's update our query and find out whether 1982 really was such a great year for video games.</p>
 
-# In[60]:
+# In[8]:
 
 
-get_ipython().run_cell_magic('sql', '', '\nSELECT \n    school_name, average_math -- Select school and average_math \nFROM\n    schools\nWHERE average_math >= 640 -- Filter for average_math 640 or higher\nORDER BY average_math DESC; -- Display from largest to smallest average_math')
+get_ipython().run_cell_magic('sql', '', '\n-- Paste your query from the previous task; update it to add a count of games released in each year called num_games\n-- Update the query so that it only returns years that have more than four reviewed games\nSELECT g.year, COUNT(g.game) AS num_games, ROUND(AVG(r.critic_score),2) AS avg_critic_score\nFROM game_sales g\nINNER JOIN reviews r\nON g.game = r.game\nGROUP BY g.year\nHAVING COUNT(g.game) > 4\nORDER BY avg_critic_score DESC\nLIMIT 10;')
 
 
-# In[ ]:
+# In[9]:
 
 
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task4_columns():\n    assert set(last_output_df.columns) == set(["school_name", "average_math"]), \\\n    "Did you select the correct columns?"\n\ndef test_task4_filter():\n    assert last_output_df["average_math"].min() >= 640, \\\n    """Did you correctly filter for "average_math" scores more than or equal to 640?"""\n    assert last_output_df.shape == (10, 2), \\\n    """The output has the wrong number of results, did you correctly filter the "average_math" column?"""\n\ndef test_task4_values():\n    assert last_output_df.iloc[0,0] == "Stuyvesant High School", \\\n    """Did you run the correct query? Expected the first school to be "Stuyvesant High School"."""\n    assert last_output_df.iloc[0,1] == 754.0, \\\n    """Did you correctly sort the values by "average_math" in descending order? Expected a different range of results."""')
+get_ipython().run_cell_magic('nose', '', 'from decimal import Decimal as D\nlast_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (10, 3), \\\n    "Make sure to limit the query to only ten results."\n    assert set(last_output.DataFrame().columns) == set(["year", "num_games", "avg_critic_score"]), \\\n    \'The results should have three columns: "year", "num_games", and "avg_critic_score".\'\n    assert last_output.DataFrame().loc[0, \'year\'] == 1998, \\\n    "The year with the highest score should be 1998."\n    assert last_output.DataFrame().loc[0, \'num_games\'] == 10, \\\n    "In the year with the highest critic score, there were 10 games released."\n    assert last_output.DataFrame().loc[0, \'avg_critic_score\'] == D(\'9.32\'), \\\n    "The highest average critic score should be 9.32."')
 
 
-# ## 5. Lowest reading score
-# <p>Wow, there are only ten public schools in New York City with an average math score of at least 640!</p>
-# <p>Now let's look at the other end of the spectrum and find the single lowest score for reading. We will only select the score, not the school, to avoid naming and shaming!</p>
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('sql', '', '\n-- Find lowest average_reading\nSELECT MIN(average_reading) AS lowest_reading\nFROM schools;')
-
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task5_value():  \n    assert last_output_df["lowest_reading"].values.tolist() == [302.0], \\\n    """Did you select the minimum value for the "average_reading" column?"""\n\ndef test_task5_alias():\n    assert last_output_df.columns.tolist() == ["lowest_reading"], \\\n    """Did you use the correct alias? Expected "lowest_reading"."""')
-
-
-# ## 6. Best writing school
-# <p>The lowest average score for reading across schools in New York City is less than 40% of the total available points! </p>
-# <p>Now let's find the school with the highest average writing score.</p>
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('sql', '', '\nSELECT \n    school_name,\n    MAX(average_writing) AS max_writing --- Find the top score for average_writing\nFROM schools\nGROUP BY school_name --- Group the results by school\nORDER BY max_writing DESC --- Sort by max_writing in descending order\nLIMIT 1; -- Reduce output to one school')
-
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task6_columns():\n    assert set(last_output_df.columns) == set(["school_name", "max_writing"]), \\\n    """Did you select "average_writing" and use an alias?"""\n    \ndef test_task6_shape():\n    assert last_output_df.shape[0] == 1, \\\n    "Did you select the correct number of values? Expected one row."\n\ndef test_task6_values():\n    assert last_output_df.values.tolist() == [[\'Stuyvesant High School\', 693.0]], \\\n    """Did you select the maximum value for "average_writing"? Expected a different value."""  ')
-
-
-# ## 7. Top 10 schools
-# <p>An average writing score of 693 is pretty impressive! </p>
-# <p>This top writing score was at the same school that got the top math score, Stuyvesant High School. Stuyvesant is widely known as a perennial top school in New York. </p>
-# <p>What other schools are also excellent across the board? Let's look at scores across reading, writing, and math to find out.</p>
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('sql', '', '-- Calculate average_sat\n-- Group by school_name\n-- Sort by average_sat in descending order\n-- Display the top ten results\n\nSELECT\n    school_name,\n    SUM(average_math) + SUM(average_reading) + SUM(average_writing) AS average_sat\nFROM schools\nGROUP BY school_name\nORDER BY average_sat DESC\nLIMIT 10;')
-
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task7_columns():\n    assert set(last_output_df.columns) == set(["school_name", "average_sat"]), \\\n    """Did you select the correct columns and use an alias for the sum of the three sat score columns?"""\n    \ndef test_task7_shape():\n    assert last_output_df.shape[0] == 10, \\\n    "Did you limit the number of results to ten?"\n    assert last_output_df.shape[1] == 2, \\\n    """Expected your query to return two columns: "school_name" and "average_sat"."""\n\ndef test_task7_values():\n    assert last_output_df.iloc[0].values.tolist() == [\'Stuyvesant High School\', 2144], \\\n    """Did you correctly define your query? Expected different values for the first school."""\n    assert last_output_df["average_sat"].min() == 1889, \\\n    """Did you correctly filter the results? Expected a different lowest score for "average_sat"."""  \n    assert last_output_df["average_sat"].max() == 2144, \\\n    """Did you correctly calculate the "average_sat" column? Expected a different top score."""')
-
-
-# ## 8. Ranking boroughs
-# <p>There are four schools with average SAT scores of over 2000! Now let's analyze performance by New York City borough. </p>
-# <p>We will build a query that calculates the number of schools and the average SAT score per borough!</p>
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('sql', '', '\n-- Select borough and a count of all schools, aliased as num_schools\n-- Calculate the sum of average_math, average_reading, and average_writing, divided by a count of all schools, aliased as average_borough_sat\n-- Organize results by borough\n-- Display by average_borough_sat in descending order\n\nSELECT \n    borough,\n    COUNT(school_name) AS num_schools,\n    (SUM(average_math) + SUM(average_reading) + SUM(average_writing))/COUNT(school_name) AS average_borough_sat\nFROM schools\nGROUP BY borough\nORDER BY average_borough_sat DESC;')
-
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task8_columns():\n    assert set(last_output_df.columns) == set([\'borough\', \'num_schools\', \'average_borough_sat\']), \\\n    """Did you select the correct columns and use aliases for the number of schools and average sat scores?"""\n\ndef test_task8_shape():\n    assert last_output_df.shape[0] == 5, \\\n    "Did you group by the correct column? Expected five rows to be returned: one for each borough."\n    assert last_output_df.shape[1] == 3, \\\n    """Expected your query to return three columns: "borough", "num_schools", and "average_borough_sat"."""\n\ndef test_task8_values():\n    # Each assert statement checks values per row \n    assert last_output_df.iloc[0].values.tolist() == [\'Staten Island\', 10, 1439], \\\n    """Did you correctly define your query? Expected different values for Staten Island."""\n    assert last_output_df.iloc[1].values.tolist() == [\'Queens\', 69, 1345], \\\n    """Did you correctly define your query? Expected different values for Queens."""\n    assert last_output_df.iloc[2].values.tolist() == [\'Manhattan\', 89, 1340], \\\n    """Did you correctly define your query? Expected different values for Manhattan."""\n    assert last_output_df.iloc[3].values.tolist() == [\'Brooklyn\', 109, 1230], \\\n    """Did you correctly define your query? Expected different values for Brooklyn."""\n    assert last_output_df.iloc[4].values.tolist() == [\'Bronx\', 98, 1202], \\\n    """Did you correctly define your query? Expected different values for the Bronx."""\n    # Check lowest average_reading score is in the last row\n    assert last_output_df.iloc[-1, 0] == \'Bronx\', \\\n    """Did you sort the results by "average_sat" in descending order?"""')
-
-
-# ## 9. Brooklyn numbers
-# <p>It appears that schools in Staten Island, on average, produce higher scores across all three categories. However, there are only 10 schools in Staten Island, compared to an average of 91 schools in the other four boroughs!</p>
-# <p>For our final query of the database, let's focus on Brooklyn, which has 109 schools. We wish to find the top five schools for math performance.</p>
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('sql', '', "\n-- Select school and average_math\n-- Filter for schools in Brooklyn\n-- Aggregate on school_name\n-- Display results from highest average_math and restrict output to five rows\n\nSELECT \n    school_name,\n    average_math\nFROM schools\nWHERE borough = 'Brooklyn'\nORDER BY average_math DESC\nLIMIT 5;")
-
-
-# In[ ]:
-
-
-get_ipython().run_cell_magic('nose', '', 'last_output = _\nlast_output_df = last_output.DataFrame()\n\ndef test_task9_columns():\n    assert last_output_df.columns.tolist() == [\'school_name\', \'average_math\'], \\\n    """Did you select the correct columns? Expected "school_name" and "average_math"."""\n    \ndef test_task9_shape():\n    assert last_output_df.shape[0] == 5, \\\n    "Did you limit the output to 5 rows?"\n    assert last_output_df.shape[1] == 2, \\\n    "Did you select the correct number of columns? Expected two."\n    \ndef test_task9_school_names():\n    assert last_output_df["school_name"].tolist() == [\'Brooklyn Technical High School\', \'Brooklyn Latin School\', \'Leon M. Goldstein High School for the Sciences\', \'Millennium Brooklyn High School\', \'Midwood High School\'], \\\n    "Did you correctly filter by borough? Expected a different list of school names."\n    \ndef test_task9_values():\n    assert last_output_df["average_math"].max() == 682, \\\n    """Did you select the correct values? Expected a maximum value of 682.0 for "average_math"."""    \n    assert last_output_df["average_math"].min() == 550, \\\n    """Did you select the correct values? Expected a minimum value of 550.0 for "average_math"."""\n    assert last_output_df["average_math"].values.tolist() == [682, 625, 563, 553, 550], \\\n    """Did you sort by "average_math" in descending order? Expected different values."""')
+# ## 5. Years that dropped off the critics' favorites list
+# <p>That looks better! The <code>num_games</code> column convinces us that our new list of the critics' top games reflects years that had quite a few well-reviewed games rather than just one or two hits. But which years dropped off the list due to having four or fewer reviewed games? Let's identify them so that someday we can track down more game reviews for those years and determine whether they might rightfully be considered as excellent years for video game releases!</p>
+# <p>It's time to brush off your set theory skills. To get started, we've created tables with the results of our previous two queries:</p>
+# <h3 id="top_critic_years"><code>top_critic_years</code></h3>
+# <table>
+# <thead>
+# <tr>
+# <th style="text-align:left;">column</th>
+# <th>type</th>
+# <th>meaning</th>
+# </tr>
+# </thead>
+# <tbody>
+# <tr>
+# <td style="text-align:left;"><code>year</code></td>
+# <td>int</td>
+# <td>Year of video game release</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>avg_critic_score</code></td>
+# <td>float</td>
+# <td>Average of all critic scores for games released in that year</td>
+# </tr>
+# </tbody>
+# </table>
+# <h3 id="top_critic_years_more_than_four_games"><code>top_critic_years_more_than_four_games</code></h3>
+# <table>
+# <thead>
+# <tr>
+# <th style="text-align:left;">column</th>
+# <th>type</th>
+# <th>meaning</th>
+# </tr>
+# </thead>
+# <tbody>
+# <tr>
+# <td style="text-align:left;"><code>year</code></td>
+# <td>int</td>
+# <td>Year of video game release</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>num_games</code></td>
+# <td>int</td>
+# <td>Count of the number of video games released in that year</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>avg_critic_score</code></td>
+# <td>float</td>
+# <td>Average of all critic scores for games released in that year</td>
+# </tr>
+# </tbody>
+# </table>
+
+# In[10]:
+
+
+get_ipython().run_cell_magic('sql', '', '\n-- Select the year and avg_critic_score for those years that dropped off the list of critic favorites \n-- Order the results from highest to lowest avg_critic_score\nSELECT year, avg_critic_score\nFROM top_critic_years\nEXCEPT\nSELECT year, avg_critic_score\nFROM top_critic_years_more_than_four_games\nORDER BY avg_critic_score DESC;')
+
+
+# In[11]:
+
+
+get_ipython().run_cell_magic('nose', '', 'last_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (6, 2), \\\n    "There should be six years that dropped off the critics\' favorite list after implementing the criteria that the year had to have at least five games released to be considered."\n    assert results.columns.tolist() == ["year", "avg_critic_score"], \\\n    \'The results should have two columns: "year" and "avg_critic_score".\'\n    assert last_output.DataFrame().loc[5, \'year\'] == 1982, \\\n    "The last year returned by the query should be 1982."\n    assert last_output.DataFrame().loc[5, \'avg_critic_score\'] == 9.00, \\\n    "1982\'s average critic score should be 9.00."')
+
+
+# ## 6. Years video game players loved
+# <p>Based on our work in the task above, it looks like the early 1990s might merit consideration as the golden age of video games based on <code>critic_score</code> alone, but we'd need to gather more games and reviews data to do further analysis. </p>
+# <p>Let's move on to looking at the opinions of another important group of people: players! To begin, let's create a query very similar to the one we used in Task Four, except this one will look at <code>user_score</code> averages by year rather than <code>critic_score</code> averages.</p>
+
+# In[12]:
+
+
+get_ipython().run_cell_magic('sql', '', '\n-- Select year, an average of user_score, and a count of games released in a given year, aliased and rounded\n-- Include only years with more than four reviewed games; group data by year\n-- Order data by avg_user_score, and limit to ten results\nSELECT g.year, COUNT(g.game) AS num_games, ROUND(AVG(r.user_score),2) AS avg_user_score\nFROM game_sales g\nINNER JOIN reviews r\nON g.game = r.game\nGROUP BY g.year\nHAVING COUNT(g.game) > 4\nORDER BY avg_user_score DESC\nLIMIT 10;')
+
+
+# In[13]:
+
+
+get_ipython().run_cell_magic('nose', '', 'last_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (10, 3), \\\n    "Don\'t forget to limit the query results to ten."\n    assert set(results.columns.tolist()) == set(["year", "num_games", "avg_user_score"]), \\\n    \'The results should have three columns: "year", "num_games", and "avg_user_score".\'\n    assert last_output.DataFrame().loc[0, \'year\'] == 1997, \\\n    "The year with the highest user score should be 1997."\n    assert last_output.DataFrame().loc[0, \'num_games\'] == 8, \\\n    "In the year with the highest user score, there were eight games released."\n    assert last_output.DataFrame().loc[0, \'avg_user_score\'] == 9.50, \\\n    "The highest average user score should be 9.50."')
+
+
+# ## 7. Years that both players and critics loved
+# <p>Alright, we've got a list of the top ten years according to both critic reviews and user reviews. Are there any years that showed up on both tables? If so, those years would certainly be excellent ones!</p>
+# <p>Recall that we have access to the <code>top_critic_years_more_than_four_games</code> table, which stores the results of our top critic years query from Task 4:</p>
+# <h3 id="top_critic_years_more_than_four_games"><code>top_critic_years_more_than_four_games</code></h3>
+# <table>
+# <thead>
+# <tr>
+# <th style="text-align:left;">column</th>
+# <th>type</th>
+# <th>meaning</th>
+# </tr>
+# </thead>
+# <tbody>
+# <tr>
+# <td style="text-align:left;"><code>year</code></td>
+# <td>int</td>
+# <td>Year of video game release</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>num_games</code></td>
+# <td>int</td>
+# <td>Count of the number of video games released in that year</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>avg_critic_score</code></td>
+# <td>float</td>
+# <td>Average of all critic scores for games released in that year</td>
+# </tr>
+# </tbody>
+# </table>
+# <p>We've also saved the results of our top user years query from the previous task into a table:</p>
+# <h3 id="top_user_years_more_than_four_games"><code>top_user_years_more_than_four_games</code></h3>
+# <table>
+# <thead>
+# <tr>
+# <th style="text-align:left;">column</th>
+# <th>type</th>
+# <th>meaning</th>
+# </tr>
+# </thead>
+# <tbody>
+# <tr>
+# <td style="text-align:left;"><code>year</code></td>
+# <td>int</td>
+# <td>Year of video game release</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>num_games</code></td>
+# <td>int</td>
+# <td>Count of the number of video games released in that year</td>
+# </tr>
+# <tr>
+# <td style="text-align:left;"><code>avg_user_score</code></td>
+# <td>float</td>
+# <td>Average of all user scores for games released in that year</td>
+# </tr>
+# </tbody>
+# </table>
+
+# In[14]:
+
+
+get_ipython().run_cell_magic('sql', '', '\n-- Select the year results that appear on both tables\nSELECT year\nFROM top_user_years_more_than_four_games\nINTERSECT\nSELECT year\nFROM top_critic_years_more_than_four_games;')
+
+
+# In[15]:
+
+
+get_ipython().run_cell_magic('nose', '', 'last_output = _\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (3, 1), \\\n    "There should be three years present in both tables."\n    assert results.columns.tolist() == ["year"], \\\n    \'The results should just have one column: "year".\'\n    assert last_output.DataFrame().loc[0, \'year\'] == 1998, \\\n    "The first year returned by the query should be 1998."')
+
+
+# ## 8. Sales in the best video game years
+# <p>Looks like we've got three years that both users and critics agreed were in the top ten! There are many other ways of measuring what the best years for video games are, but let's stick with these years for now. We know that critics and players liked these years, but what about video game makers? Were sales good? Let's find out.</p>
+# <p>This time, we haven't saved the results from the previous task in a table for you. Instead, we'll use the query from the previous task as a subquery in this one! This is a great skill to have, as we don't always have write permissions on the database we are querying.</p>
+
+# In[16]:
+
+
+get_ipython().run_cell_magic('sql', '', '\n-- Select year and sum of games_sold, aliased as total_games_sold; order results by total_games_sold descending\n-- Filter game_sales based on whether each year is in the list returned in the previous task\nSELECT g.year, SUM(g.games_sold) AS total_games_sold\nFROM game_sales g\nWHERE g.year IN (SELECT year\nFROM top_user_years_more_than_four_games\nINTERSECT\nSELECT year\nFROM top_critic_years_more_than_four_games)\nGROUP BY g.year\nORDER BY total_games_sold DESC;')
+
+
+# In[17]:
+
+
+get_ipython().run_cell_magic('nose', '', 'from decimal import Decimal as D\nlast_output = _\n\n\ndef test_output_type():\n    assert str(type(last_output)) == "<class \'sql.run.ResultSet\'>", \\\n    "Please ensure an SQL ResultSet is the output of the code cell." \n\nresults = last_output.DataFrame()\n\ndef test_results():\n    assert results.shape == (3, 2), \\\n    "There should be games sales data for three years: the same three years from the previous query."\n    assert results.columns.tolist() == ["year", "total_games_sold"], \\\n    \'The results should have two columns: "year" and "total_games_sold".\'\n    assert last_output.DataFrame().loc[0, \'year\'] == 2008, \\\n    "Just like in the last query, the first year returned should be 2008."\n    assert last_output.DataFrame().loc[0, \'total_games_sold\'] == D(\'175.07\'), \\\n    "In 2008, the total_games_sold value should be 175.07."')
 
