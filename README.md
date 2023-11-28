@@ -1,6 +1,5 @@
 # SQL-DataCamp-Projects
 📊 Guided projects
-
 ### 1. Analyzing American Baby Name Trends
   * Apply the CASE function to add a new column based on some conditions
   * Apply the DENSE_RANK(), SUM() window function
